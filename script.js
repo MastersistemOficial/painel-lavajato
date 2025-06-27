@@ -1,4 +1,3 @@
-
 async function carregarPainel() {
   const clientId = document.getElementById("clientId").value.trim();
   if (!clientId) return alert("Informe seu código.");
