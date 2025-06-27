@@ -12,7 +12,7 @@ const supabase = createClient(
 function PainelCliente() {
   const { clienteId } = useParams();
   const [cliente, setCliente] = useState(null);
-  const [fila, setFila] = useState(null);
+  const [fila, setFila] = useState([]);
   const [lavagensHistorico, setLavagensHistorico] = useState([]);
   const [posicaoFila, setPosicaoFila] = useState(null);
 
@@ -32,12 +32,10 @@ function PainelCliente() {
           .select("*")
           .order("entrada_fila", { ascending: true });
 
-        if (fila && fila.length > 0) {
-          const ativa = fila.find(f => f.status !== "finalizado" && f.cliente_id === cliente.id);
-          setFila(ativa);
-
-          const posicao = fila.filter(f => f.status !== "finalizado").findIndex(f => f.cliente_id === cliente.id);
-          setPosicaoFila(posicao >= 0 ? posicao + 1 : null);
+        if (fila) {
+          setFila(fila);
+          const pos = fila.filter(f => f.status !== "finalizado").findIndex(f => f.cliente_id === cliente.id);
+          setPosicaoFila(pos >= 0 ? pos + 1 : null);
         }
 
         const { data: lavagens } = await supabase
@@ -64,33 +62,74 @@ function PainelCliente() {
     return renovacao.toLocaleDateString();
   };
 
-  const Card = ({ title, value, highlight }) => (
-    <div style={{
-      background: highlight ? '#2563eb' : 'rgba(15,23,42,0.85)',
-      borderRadius: 12,
-      padding: 20,
-      marginBottom: 16,
-      boxShadow: highlight ? '0 0 12px #3b82f6' : '0 1px 4px rgba(0,0,0,0.2)'
-    }}>
-      <h3 style={{ margin: '0 0 8px', fontSize: 14, color: '#cbd5e1' }}>{title}</h3>
-      <div style={{ fontSize: highlight ? 28 : 22, fontWeight: 700 }}>{value}</div>
-    </div>
-  );
+  const isProximo = posicaoFila && posicaoFila <= 2;
 
   return (
-    <div style={{
-      padding: 24, maxWidth: 460, margin: '0 auto',
-      backgroundColor: 'rgba(0,0,0,0.4)',
-      borderRadius: 16, marginTop: 40
-    }}>
-      <h1 style={{ fontSize: 26, marginBottom: 24, textAlign: 'center', color: '#38bdf8' }}>
-        Painel Pit Stop
-      </h1>
-      <Card title="Plano" value={cliente?.plano || "---"} />
-      <Card title="Lavagens restantes" value={cliente?.lavagens_restantes ?? "---"} />
-      <Card title="Total já usadas" value={lavagensHistorico.length} />
-      <Card title="Data de renovação" value={proximaRenovacao()} />
-      {posicaoFila && <Card title="Posição na fila" value={posicaoFila} highlight />}
+    <div style={{ padding: 20, maxWidth: 400, margin: "0 auto" }}>
+      <h1 style={{ fontSize: 22, marginBottom: 20, color: "#fff" }}>Painel Pit Stop</h1>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        <div style={{
+          backgroundColor: "#ef4444",
+          borderRadius: 20,
+          textAlign: "center",
+          padding: "30px 10px",
+          fontSize: 32,
+          fontWeight: "bold",
+          color: "#fff"
+        }}>
+          {cliente?.lavagens_restantes ?? "-"}
+          <div style={{ fontSize: 12, marginTop: 8 }}>Lavagens restantes</div>
+        </div>
+
+        <div style={{
+          backgroundColor: "#fff",
+          color: "#111",
+          borderRadius: 20,
+          padding: "20px 12px",
+          fontWeight: 500,
+          fontSize: 14
+        }}>
+          Plano: {cliente?.plano || "---"}
+        </div>
+
+        <div style={{
+          backgroundColor: "#fff",
+          color: "#111",
+          borderRadius: 20,
+          padding: "20px 12px",
+          fontWeight: "bold",
+          fontSize: 16,
+          boxShadow: isProximo ? "0 0 15px 2px #facc15" : "none"
+        }}>
+          Posição na fila: {posicaoFila ?? "-"}
+        </div>
+
+        <div style={{
+          backgroundColor: "#fff",
+          color: "#111",
+          borderRadius: 20,
+          padding: "20px 12px",
+          fontWeight: 500,
+          fontSize: 14
+        }}>
+          Data de renovação:<br /> <strong>{proximaRenovacao()}</strong>
+        </div>
+      </div>
+
+      <button style={{
+        marginTop: 30,
+        width: "100%",
+        padding: "14px 0",
+        backgroundColor: "#ef4444",
+        color: "#fff",
+        fontSize: 16,
+        border: "none",
+        borderRadius: 100,
+        fontWeight: "bold"
+      }}>
+        Agendar Lavagem
+      </button>
     </div>
   );
 }
