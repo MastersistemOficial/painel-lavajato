@@ -65,68 +65,76 @@ function PainelCliente() {
   const isProximo = posicaoFila && posicaoFila <= 2;
 
   return (
-    <div style={{ padding: 20, maxWidth: 400, margin: "0 auto" }}>
-      <h1 style={{ fontSize: 22, marginBottom: 20, color: "#fff" }}>Painel Pit Stop</h1>
+    <div style={{ minHeight: "100vh", padding: 20, maxWidth: 440, margin: "0 auto", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <div>
+        <h1 style={{ fontSize: 24, marginBottom: 28, textAlign: "center", color: "#fff" }}>Painel Pit Stop</h1>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        <div style={{
-          backgroundColor: "#ef4444",
-          borderRadius: 20,
-          textAlign: "center",
-          padding: "30px 10px",
-          fontSize: 32,
-          fontWeight: "bold",
-          color: "#fff"
-        }}>
-          {cliente?.lavagens_restantes ?? "-"}
-          <div style={{ fontSize: 12, marginTop: 8 }}>Lavagens restantes</div>
-        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div style={{
+            backgroundColor: "#dc0000",
+            borderRadius: 20,
+            textAlign: "center",
+            padding: "36px 10px",
+            fontSize: 34,
+            fontWeight: 700,
+            color: "#fff"
+          }}>
+            {cliente?.lavagens_restantes ?? "-"}
+            <div style={{ fontSize: 13, marginTop: 8 }}>Lavagens restantes</div>
+          </div>
 
-        <div style={{
-          backgroundColor: "#fff",
-          color: "#111",
-          borderRadius: 20,
-          padding: "20px 12px",
-          fontWeight: 500,
-          fontSize: 14
-        }}>
-          Plano: {cliente?.plano || "---"}
-        </div>
+          <div style={{
+            backgroundColor: "#fff",
+            color: "#111",
+            borderRadius: 20,
+            padding: "20px 12px",
+            fontWeight: 600,
+            fontSize: 15,
+            display: "flex",
+            alignItems: "center"
+          }}>
+            Plano: {cliente?.plano || "---"}
+          </div>
 
-        <div style={{
-          backgroundColor: "#fff",
-          color: "#111",
-          borderRadius: 20,
-          padding: "20px 12px",
-          fontWeight: "bold",
-          fontSize: 16,
-          boxShadow: isProximo ? "0 0 15px 2px #facc15" : "none"
-        }}>
-          Posição na fila: {posicaoFila ?? "-"}
-        </div>
+          <div style={{
+            backgroundColor: "#fff",
+            color: "#111",
+            borderRadius: 20,
+            padding: "36px 12px",
+            fontWeight: "bold",
+            fontSize: 20,
+            textAlign: "center",
+            boxShadow: isProximo ? "0 0 15px 2px #facc15" : "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}>
+            Posição na fila: {posicaoFila ?? "-"}
+          </div>
 
-        <div style={{
-          backgroundColor: "#fff",
-          color: "#111",
-          borderRadius: 20,
-          padding: "20px 12px",
-          fontWeight: 500,
-          fontSize: 14
-        }}>
-          Data de renovação:<br /> <strong>{proximaRenovacao()}</strong>
+          <div style={{
+            backgroundColor: "#fff",
+            color: "#111",
+            borderRadius: 20,
+            padding: "20px 12px",
+            fontWeight: 500,
+            fontSize: 14
+          }}>
+            Data de renovação:<br /> <strong>{proximaRenovacao()}</strong>
+          </div>
         </div>
       </div>
 
       <button style={{
-        marginTop: 30,
+        marginTop: 40,
         width: "100%",
-        padding: "14px 0",
-        backgroundColor: "#ef4444",
+        padding: "16px 0",
+        backgroundColor: "#dc0000",
         color: "#fff",
         fontSize: 16,
         border: "none",
         borderRadius: 100,
-        fontWeight: "bold"
+        fontWeight: 700
       }}>
         Agendar Lavagem
       </button>
