@@ -64,14 +64,29 @@ function PainelCliente() {
     return renovacao.toLocaleDateString();
   };
 
+  const Card = ({ title, value }) => (
+    <div style={{
+      background: '#1e293b',
+      borderRadius: 12,
+      padding: 20,
+      marginBottom: 16,
+      boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+    }}>
+      <h3 style={{ margin: '0 0 8px', fontSize: 16, color: '#94a3b8' }}>{title}</h3>
+      <div style={{ fontSize: 24, fontWeight: 600 }}>{value}</div>
+    </div>
+  );
+
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Painel do Cliente</h1>
-      <p><strong>Plano:</strong> {cliente?.plano || "---"}</p>
-      <p><strong>Lavagens restantes:</strong> {cliente?.lavagens_restantes ?? "---"}</p>
-      <p><strong>Total já usadas:</strong> {lavagensHistorico.length}</p>
-      <p><strong>Data de renovação:</strong> {proximaRenovacao()}</p>
-      {posicaoFila && <p><strong>Posição na fila:</strong> {posicaoFila}</p>}
+    <div style={{ padding: 24, maxWidth: 480, margin: '0 auto' }}>
+      <h1 style={{ fontSize: 28, marginBottom: 24, textAlign: 'center', color: '#38bdf8' }}>
+        Painel Pit Stop
+      </h1>
+      <Card title="Plano" value={cliente?.plano || "---"} />
+      <Card title="Lavagens restantes" value={cliente?.lavagens_restantes ?? "---"} />
+      <Card title="Total já usadas" value={lavagensHistorico.length} />
+      <Card title="Data de renovação" value={proximaRenovacao()} />
+      {posicaoFila && <Card title="Posição na fila" value={posicaoFila} />}
     </div>
   );
 }
