@@ -1,42 +1,49 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Painel Pit Stop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <div class="top-bar">
-      <div class="logo">Pit Stop</div>
-      <div class="status-icons">📶 📡 🔋</div>
-    </div>
-    <div class="main-title">Painel Pit Stop</div>
-
-    <div class="card-row-1">
-      <div class="wash-remaining-card">
-        <div class="wash-number">4</div>
-        <div class="wash-label">Lavagens restantes</div>
-      </div>
-      <div class="plan-card">
-        <span>Plano: <strong>Essencial</strong></span>
-      </div>
+    <h1>Painel Pit Stop</h1>
+    <div id="input-area">
+      <label for="clientId">Digite seu código ou telefone:</label>
+      <input type="text" id="clientId" placeholder="Ex: cliente1"/>
+      <button onclick="carregarPainel()">Entrar</button>
     </div>
 
-    <div class="card-row-2">
-      <div class="renewal-card">
-        <span>Data de renovação:</span><br />
-        <strong>27/07/2025</strong>
+    <div id="painel" style="display:none;">
+      <div class="card destaque">
+        <div id="lavagensRestantes" class="valor-grande">--</div>
+        <div class="descricao">Lavagens restantes</div>
       </div>
-      <div class="queue-card">
-        <span>Posição na fila:</span><br />
-        <strong>1</strong>
+      <div class="row">
+        <div class="card info">
+          <div>Plano: <strong id="plano">--</strong></div>
+        </div>
+        <div class="card info">
+          <div>Posição na fila:</div>
+          <strong id="posicaoFila">--</strong>
+        </div>
       </div>
+      <div class="row">
+        <div class="card info">
+          <div>Data de renovação:</div>
+          <strong id="renovacao">--</strong>
+        </div>
+        <div class="card info">
+          <div>Total já usadas:</div>
+          <strong id="usadas">--</strong>
+        </div>
+      </div>
+      <button class="botao">Agendar Lavagem</button>
     </div>
-
-    <button class="primary-button">Agendar Lavagem</button>
   </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
