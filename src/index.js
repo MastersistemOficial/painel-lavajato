@@ -1,152 +1,141 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
-import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  "https://uhjfjlfelgymieqndbkk.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoamZqbGZlbGd5bWllcW5kYmtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5OTg2NTcsImV4cCI6MjA2NjU3NDY1N30.HVCVhPCzF-S1PuVNe3xIC_mqE6nRas0wu7HSssLSKHw"
-);
-
-function PainelCliente() {
-  const { clienteId } = useParams();
-  const [cliente, setCliente] = useState(null);
-  const [fila, setFila] = useState([]);
-  const [lavagensHistorico, setLavagensHistorico] = useState([]);
-  const [posicaoFila, setPosicaoFila] = useState(null);
-
-  useEffect(() => {
-    async function fetchCliente() {
-      const { data: cliente } = await supabase
-        .from("clientes")
-        .select("*")
-        .eq("painel_url", `https://painel.lavajato.com/${clienteId}`)
-        .single();
-
-      if (cliente) {
-        setCliente(cliente);
-
-        const { data: fila } = await supabase
-          .from("fila")
-          .select("*")
-          .order("entrada_fila", { ascending: true });
-
-        if (fila) {
-          setFila(fila);
-          const pos = fila.filter(f => f.status !== "finalizado").findIndex(f => f.cliente_id === cliente.id);
-          setPosicaoFila(pos >= 0 ? pos + 1 : null);
-        }
-
-        const { data: lavagens } = await supabase
-          .from("lavagens")
-          .select("*")
-          .eq("cliente_id", cliente.id);
-
-        if (lavagens) {
-          setLavagensHistorico(lavagens);
-        }
-      }
-    }
-
-    fetchCliente();
-    const interval = setInterval(fetchCliente, 30000);
-    return () => clearInterval(interval);
-  }, [clienteId]);
-
-  const proximaRenovacao = () => {
-    if (!cliente?.renovacao_dia) return "--";
-    const hoje = new Date();
-    const renovacao = new Date(hoje.getFullYear(), hoje.getMonth(), cliente.renovacao_dia);
-    if (renovacao < hoje) renovacao.setMonth(renovacao.getMonth() + 1);
-    return renovacao.toLocaleDateString();
-  };
-
-  const isProximo = posicaoFila && posicaoFila <= 2;
-
+const App = () => {
   return (
-    <div style={{ minHeight: "100vh", padding: 20, maxWidth: 440, margin: "0 auto", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-      <div>
-        <h1 style={{ fontSize: 24, marginBottom: 28, textAlign: "center", color: "#fff" }}>Painel Pit Stop</h1>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 20, height: '100%', justifyContent: 'space-between' }}>
-          <div style={{
-            backgroundColor: "#dc0000",
-            borderRadius: 20,
-            textAlign: "center",
-            padding: "36px 10px",
-            fontSize: 34,
-            fontWeight: 700,
-            color: "#fff"
-          }}>
-            {cliente?.lavagens_restantes ?? "-"}
-            <div style={{ fontSize: 13, marginTop: 8 }}>Lavagens restantes</div>
-          </div>
-
-          <div style={{
-            backgroundColor: "#fff",
-            color: "#111",
-            borderRadius: 20,
-            padding: "20px 12px",
-            fontWeight: 600,
-            fontSize: 15,
-            display: "flex",
-            alignItems: "center"
-          }}>
-            <div style={{ textAlign: 'center', width: '100%' }}>Plano: {cliente?.plano || "---"}</div>
-          </div>
-
-          <div style={{
-            backgroundColor: "#fff",
-            color: "#111",
-            borderRadius: 20,
-            padding: "36px 12px",
-            fontWeight: "bold",
-            fontSize: 20,
-            textAlign: "center",
-            boxShadow: isProximo ? "0 0 15px 2px #facc15" : "none",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}>
-            Posição na fila: {posicaoFila ?? "-"}
-          </div>
-
-          <div style={{
-            backgroundColor: "#fff",
-            color: "#111",
-            borderRadius: 20,
-            padding: "20px 12px",
-            fontWeight: 500,
-            fontSize: 14
-          }}>
-            <div style={{ textAlign: 'center' }}>Data de renovação:<br /><strong>{proximaRenovacao()}</strong></div>
-          </div>
+    <div style={{
+      backgroundColor: '#1C1C1E',
+      color: '#FFFFFF',
+      width: '100%',
+      minHeight: '100vh',
+      padding: 24,
+      boxSizing: 'border-box',
+      fontFamily: 'Poppins, sans-serif',
+      position: 'relative'
+    }}>
+      {/* Logo superior */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 20 }}>
+        <div style={{
+          backgroundColor: '#E64556',
+          borderRadius: 8,
+          padding: '6px 12px',
+          fontSize: 28
+        }}>Pit Stop</div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <span style={{ width: 24, height: 24, backgroundColor: '#fff', borderRadius: 4 }} />
+          <span style={{ width: 24, height: 24, backgroundColor: '#fff', borderRadius: 4 }} />
+          <span style={{ width: 24, height: 24, backgroundColor: '#fff', borderRadius: 4 }} />
         </div>
       </div>
 
-      <button style={{
-        marginTop: 20,
-        width: "100%",
-        padding: "16px 0",
-        backgroundColor: "#dc0000",
-        color: "#fff",
-        fontSize: 16,
-        border: "none",
-        borderRadius: 100,
-        fontWeight: 700
-      }}>
-        Agendar Lavagem
-      </button>
+      <h1 style={{ fontSize: 48, fontWeight: 700, color: '#FFFFFF', margin: '24px 0' }}>Painel Pit Stop</h1>
+
+      {/* Cartões */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24 }}>
+        {/* Lavagens restantes */}
+        <div style={{
+          width: 480,
+          height: 480,
+          backgroundColor: '#E64556',
+          borderRadius: 24,
+          boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: '#FFFFFF'
+        }}>
+          <div style={{ fontSize: 180, fontWeight: 800 }}>4</div>
+          <div style={{ fontSize: 32, fontWeight: 400, marginTop: 16 }}>Lavagens restantes</div>
+        </div>
+
+        {/* Plano com sobreposição */}
+        <div style={{ position: 'relative', width: 480, height: 230 }}>
+          <div style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            width: 480,
+            height: 230,
+            backgroundColor: '#2C2C2E',
+            borderRadius: 24,
+            zIndex: 1
+          }}></div>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: 480,
+            height: 230,
+            backgroundColor: '#FFFFFF',
+            borderRadius: 24,
+            padding: 24,
+            zIndex: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            color: '#000000'
+          }}>
+            <div style={{ fontSize: 32, fontWeight: 400 }}>Plano: <span style={{ fontSize: 48, fontWeight: 700 }}>Essencial</span></div>
+          </div>
+        </div>
+
+        {/* Posição na fila */}
+        <div style={{
+          width: 480,
+          height: 230,
+          backgroundColor: '#FFFFFF',
+          borderRadius: 24,
+          padding: 24,
+          boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          color: '#000000'
+        }}>
+          <div style={{ fontSize: 32, fontWeight: 400 }}>Posição na fila:</div>
+          <div style={{ fontSize: 48, fontWeight: 700, marginTop: 8 }}>1</div>
+        </div>
+
+        {/* Data de renovação */}
+        <div style={{
+          width: 480,
+          height: 230,
+          backgroundColor: '#FFFFFF',
+          borderRadius: 24,
+          padding: 24,
+          boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          color: '#000000'
+        }}>
+          <div style={{ fontSize: 32, fontWeight: 400 }}>Data de renovação:</div>
+          <div style={{ fontSize: 48, fontWeight: 700, marginTop: 8 }}>27/07/2025</div>
+        </div>
+      </div>
+
+      {/* Botão */}
+      <div style={{ marginTop: 48 }}>
+        <button style={{
+          width: 984,
+          height: 96,
+          backgroundColor: '#E64556',
+          borderRadius: 48,
+          border: 'none',
+          fontSize: 40,
+          fontWeight: 700,
+          color: '#FFFFFF',
+          display: 'block',
+          margin: '48px auto 0 auto'
+        }}>
+          Agendar Lavagem
+        </button>
+      </div>
     </div>
   );
-}
+};
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/:clienteId" element={<PainelCliente />} />
-    </Routes>
-  </BrowserRouter>
-);
+root.render(<App />);
