@@ -64,29 +64,33 @@ function PainelCliente() {
     return renovacao.toLocaleDateString();
   };
 
-  const Card = ({ title, value }) => (
+  const Card = ({ title, value, highlight }) => (
     <div style={{
-      background: '#1e293b',
+      background: highlight ? '#2563eb' : 'rgba(15,23,42,0.85)',
       borderRadius: 12,
       padding: 20,
       marginBottom: 16,
-      boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+      boxShadow: highlight ? '0 0 12px #3b82f6' : '0 1px 4px rgba(0,0,0,0.2)'
     }}>
-      <h3 style={{ margin: '0 0 8px', fontSize: 16, color: '#94a3b8' }}>{title}</h3>
-      <div style={{ fontSize: 24, fontWeight: 600 }}>{value}</div>
+      <h3 style={{ margin: '0 0 8px', fontSize: 14, color: '#cbd5e1' }}>{title}</h3>
+      <div style={{ fontSize: highlight ? 28 : 22, fontWeight: 700 }}>{value}</div>
     </div>
   );
 
   return (
-    <div style={{ padding: 24, maxWidth: 480, margin: '0 auto' }}>
-      <h1 style={{ fontSize: 28, marginBottom: 24, textAlign: 'center', color: '#38bdf8' }}>
+    <div style={{
+      padding: 24, maxWidth: 460, margin: '0 auto',
+      backgroundColor: 'rgba(0,0,0,0.4)',
+      borderRadius: 16, marginTop: 40
+    }}>
+      <h1 style={{ fontSize: 26, marginBottom: 24, textAlign: 'center', color: '#38bdf8' }}>
         Painel Pit Stop
       </h1>
       <Card title="Plano" value={cliente?.plano || "---"} />
       <Card title="Lavagens restantes" value={cliente?.lavagens_restantes ?? "---"} />
       <Card title="Total já usadas" value={lavagensHistorico.length} />
       <Card title="Data de renovação" value={proximaRenovacao()} />
-      {posicaoFila && <Card title="Posição na fila" value={posicaoFila} />}
+      {posicaoFila && <Card title="Posição na fila" value={posicaoFila} highlight />}
     </div>
   );
 }
