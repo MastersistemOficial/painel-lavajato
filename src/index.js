@@ -69,7 +69,7 @@ function PainelCliente() {
       <div>
         <h1 style={{ fontSize: 24, marginBottom: 28, textAlign: "center", color: "#fff" }}>Painel Pit Stop</h1>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20, height: '100%', justifyContent: 'space-between' }}>
           <div style={{
             backgroundColor: "#dc0000",
             borderRadius: 20,
@@ -93,7 +93,7 @@ function PainelCliente() {
             display: "flex",
             alignItems: "center"
           }}>
-            Plano: {cliente?.plano || "---"}
+            <div style={{ textAlign: 'center', width: '100%' }}>Plano: {cliente?.plano || "---"}</div>
           </div>
 
           <div style={{
@@ -120,13 +120,13 @@ function PainelCliente() {
             fontWeight: 500,
             fontSize: 14
           }}>
-            Data de renovação:<br /> <strong>{proximaRenovacao()}</strong>
+            <div style={{ textAlign: 'center' }}>Data de renovação:<br /><strong>{proximaRenovacao()}</strong></div>
           </div>
         </div>
       </div>
 
       <button style={{
-        marginTop: 40,
+        marginTop: 20,
         width: "100%",
         padding: "16px 0",
         backgroundColor: "#dc0000",
